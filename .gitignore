@@ -1,0 +1,16 @@
+# build files
+build/
+*.o
+*.out
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# executables
+test
+
+# OS
+.DS_Store

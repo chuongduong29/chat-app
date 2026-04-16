@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package chat;
+
+enum Command {
+  JOIN = 0;
+  MESSAGE = 1;
+  LEAVE = 2;
+}
+
+message ChatMessage {
+  Command cmd = 1;
+  string username = 2;
+  string content = 3;
+}
