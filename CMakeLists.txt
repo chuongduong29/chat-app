@@ -36,3 +36,8 @@ add_executable(client
 target_link_libraries(client
     ${Protobuf_LIBRARIES}
 )
+
+add_executable(test_framer
+    tests/test_framer.cpp
+    src/common/message_framer.cpp
+)
