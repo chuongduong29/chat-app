@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    ports:
+      - "12345:12345"
+
+  client1:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    environment:
+      - CHAT_SERVER_HOST=server
+    depends_on:
+      - server
+    stdin_open: true
+    tty: true
+
+  client2:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    environment:
+      - CHAT_SERVER_HOST=server
+    depends_on:
+      - server
+    stdin_open: true
+    tty: true

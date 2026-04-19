@@ -56,8 +56,6 @@ target_link_libraries(client
 )
 
 # ===== GTest =====
-find_package(GTest REQUIRED)
-
 add_executable(test_all
     tests/test_framer.cpp
     tests/test_protobuf.cpp

@@ -2,12 +2,17 @@
 #include "chat.pb.h"
 #include <iostream>
 #include <thread>
+#include <cstdlib>
 
 int main() {
     try {
         boost::asio::io_context io_context;
 
-        Client client(io_context, "127.0.0.1", 12345);
+        // Client client(io_context, "127.0.0.1", 12345);
+        const char* env_host = std::getenv("CHAT_SERVER_HOST");
+        std::string host = env_host ? env_host : "127.0.0.1";
+
+        Client client(io_context, host, 12345);
 
         std::thread t([&io_context]() {
             io_context.run();
