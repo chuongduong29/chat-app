@@ -1,16 +1,19 @@
+#include "chat_server.h"
+#include <boost/asio.hpp>
 #include <iostream>
-#include "chat.pb.h"
 
 int main() {
-    chat::ChatMessage msg;
-    msg.set_cmd(chat::MESSAGE);
-    msg.set_username("server");
-    msg.set_content("hello");
+    try {
+        boost::asio::io_context io_context;
 
-    std::string data;
-    msg.SerializeToString(&data);
+        ChatServer server(io_context, 12345);
 
-    std::cout << "Serialized size: " << data.size() << std::endl;
+        std::cout << "Server running on port 12345..." << std::endl;
+
+        io_context.run();
+    } catch (std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
 
     return 0;
 }

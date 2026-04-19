@@ -6,9 +6,13 @@ set(CMAKE_CXX_STANDARD 17)
 # Find protobuf
 find_package(Protobuf REQUIRED)
 
+# Find Boost
+find_package(Boost REQUIRED COMPONENTS system)
+
 # Include protobuf headers
 include_directories(${Protobuf_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${Boost_INCLUDE_DIRS})
 
 # Proto file
 set(PROTO_FILE proto/chat.proto)
@@ -19,12 +23,15 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTO_FILE})
 # ===== Server =====
 add_executable(server
     src/server/main.cpp
+    src/server/chat_server.cpp
+    src/server/session.cpp
     ${PROTO_SRCS}
     ${PROTO_HDRS}
 )
 
 target_link_libraries(server
     ${Protobuf_LIBRARIES}
+    ${Boost_LIBRARIES}
 )
 
 # ===== Client =====
