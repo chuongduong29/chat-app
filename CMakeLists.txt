@@ -39,10 +39,13 @@ target_link_libraries(server
 # ===== Client =====
 add_executable(client
     src/client/main.cpp
+    src/client/client.cpp
+    src/common/message_framer.cpp
     ${PROTO_SRCS}
 )
 
 target_link_libraries(client
+    ${Boost_LIBRARIES}
     ${Protobuf_LIBRARIES}
 )
 
