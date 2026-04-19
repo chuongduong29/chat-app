@@ -3,16 +3,22 @@ project(ChatApp)
 
 set(CMAKE_CXX_STANDARD 17)
 
+enable_testing()
+
 # Find protobuf
 find_package(Protobuf REQUIRED)
 
 # Find Boost
 find_package(Boost REQUIRED COMPONENTS system)
 
+# Find GTest
+find_package(GTest REQUIRED)
+
 # Include protobuf headers
 include_directories(${Protobuf_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${Boost_INCLUDE_DIRS})
+include_directories(${GTEST_INCLUDE_DIRS})
 
 # Proto file
 set(PROTO_FILE proto/chat.proto)
@@ -49,7 +55,21 @@ target_link_libraries(client
     ${Protobuf_LIBRARIES}
 )
 
-add_executable(test_framer
+# ===== GTest =====
+find_package(GTest REQUIRED)
+
+add_executable(test_all
     tests/test_framer.cpp
+    tests/test_protobuf.cpp
     src/common/message_framer.cpp
+    ${PROTO_SRCS}
 )
+
+target_link_libraries(test_all
+    GTest::gtest
+    GTest::gtest_main
+    pthread
+    ${Protobuf_LIBRARIES}
+)
+
+add_test(NAME AllTests COMMAND test_all)

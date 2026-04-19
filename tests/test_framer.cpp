@@ -1,52 +1,51 @@
+#include <gtest/gtest.h>
 #include "../src/common/message_framer.h"
 
-#include <iostream>
-#include <vector>
-
-int main() {
+TEST(FramerTest, PackUnpackBasic) {
     std::vector<uint8_t> buffer;
+
+    auto packed = MessageFramer::pack("hello");
+    buffer.insert(buffer.end(), packed.begin(), packed.end());
+
     std::string out;
+    bool ok = MessageFramer::unpack(buffer, out);
 
-    // =========================
-    // Test 1: basic pack/unpack
-    // =========================
-    auto data = MessageFramer::pack("hello");
-    buffer.insert(buffer.end(), data.begin(), data.end());
+    EXPECT_TRUE(ok);
+    EXPECT_EQ(out, "hello");
+}
 
-    if (MessageFramer::unpack(buffer, out)) {
-        std::cout << "Test1: " << out << std::endl;
-    }
+TEST(FramerTest, MultipleMessages) {
+    std::vector<uint8_t> buffer;
 
-    // =========================
-    // Test 2: multiple messages
-    // =========================
     auto d1 = MessageFramer::pack("A");
     auto d2 = MessageFramer::pack("B");
 
     buffer.insert(buffer.end(), d1.begin(), d1.end());
     buffer.insert(buffer.end(), d2.begin(), d2.end());
 
-    while (MessageFramer::unpack(buffer, out)) {
-        std::cout << "Test2: " << out << std::endl;
-    }
+    std::string out;
 
-    // =========================
-    // Test 3: partial message
-    // =========================
-    auto full = MessageFramer::pack("hello_world");
+    EXPECT_TRUE(MessageFramer::unpack(buffer, out));
+    EXPECT_EQ(out, "A");
 
-    buffer.clear();
+    EXPECT_TRUE(MessageFramer::unpack(buffer, out));
+    EXPECT_EQ(out, "B");
+}
+
+TEST(FramerTest, PartialMessage) {
+    auto full = MessageFramer::pack("hello");
+
+    std::vector<uint8_t> buffer;
+
+    // chỉ insert 1 phần
     buffer.insert(buffer.end(), full.begin(), full.begin() + 3);
 
-    if (!MessageFramer::unpack(buffer, out)) {
-        std::cout << "Test3: waiting..." << std::endl;
-    }
+    std::string out;
+    EXPECT_FALSE(MessageFramer::unpack(buffer, out));
 
+    // insert phần còn lại
     buffer.insert(buffer.end(), full.begin() + 3, full.end());
 
-    if (MessageFramer::unpack(buffer, out)) {
-        std::cout << "Test3: " << out << std::endl;
-    }
-
-    return 0;
+    EXPECT_TRUE(MessageFramer::unpack(buffer, out));
+    EXPECT_EQ(out, "hello");
 }
