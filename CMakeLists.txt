@@ -25,6 +25,7 @@ add_executable(server
     src/server/main.cpp
     src/server/chat_server.cpp
     src/server/session.cpp
+    src/server/session_manager.cpp
     ${PROTO_SRCS}
     ${PROTO_HDRS}
 )

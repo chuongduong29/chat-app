@@ -1,5 +1,6 @@
 #pragma once
 #include <boost/asio.hpp>
+#include "session_manager.h"
 
 using boost::asio::ip::tcp;
 
@@ -11,4 +12,5 @@ private:
     void do_accept();
 
     tcp::acceptor acceptor_;
+    SessionManager manager_;
 };
