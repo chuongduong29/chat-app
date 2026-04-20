@@ -26,18 +26,16 @@ void Session::do_read() {
         boost::asio::buffer(buffer_),
         [this, self](boost::system::error_code ec, std::size_t length) {
             if (!ec) {
-                // append vào read buffer
+                // append to read buffer
                 read_buf_.insert(read_buf_.end(), buffer_.begin(), buffer_.begin() + length);
 
                 std::string msg_data;
 
-                // parse nhiều message nếu có
+                // parse multiple message (if any)
                 while (MessageFramer::unpack(read_buf_, msg_data)) {
                     chat::ChatMessage msg;
 
                     if (msg.ParseFromString(msg_data)) {
-                        //// xử lý message
-                        //std::cout << "Received: " << msg.content() << std::endl;
                         switch (msg.cmd()) {
                             case chat::JOIN:
                                 std::cout << msg.username() << " joined\n";
@@ -73,7 +71,7 @@ void Session::send(const std::string& data) {
         [this, self, data]() {
             bool write_in_progress = !write_queue_.empty();
 
-            // pack trước khi gửi
+            // pack before sending
             auto packed = MessageFramer::pack(data);
             write_queue_.push(std::string(packed.begin(), packed.end()));
 

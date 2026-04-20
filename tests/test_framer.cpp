@@ -37,13 +37,13 @@ TEST(FramerTest, PartialMessage) {
 
     std::vector<uint8_t> buffer;
 
-    // chỉ insert 1 phần
+    // only insert 1 part
     buffer.insert(buffer.end(), full.begin(), full.begin() + 3);
 
     std::string out;
     EXPECT_FALSE(MessageFramer::unpack(buffer, out));
 
-    // insert phần còn lại
+    // insert the left
     buffer.insert(buffer.end(), full.begin() + 3, full.end());
 
     EXPECT_TRUE(MessageFramer::unpack(buffer, out));

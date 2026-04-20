@@ -2,7 +2,7 @@
 #include "chat.pb.h"
 #include <iostream>
 #include <thread>
-#include <cstdlib>
+#include <cstdlib> //getenv
 
 int main() {
     try {
@@ -35,6 +35,8 @@ int main() {
         while (true) {
             std::string line;
             std::getline(std::cin, line);
+
+            if (line.empty()) continue;
 
             chat::ChatMessage msg;
             msg.set_cmd(chat::MESSAGE);

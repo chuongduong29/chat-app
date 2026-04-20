@@ -14,7 +14,7 @@ public:
     Session(tcp::socket socket, SessionManager& manager);
 
     void start();
-    void send(const std::string& data); // NEW
+    void send(const std::string& data);
 
 private:
     void do_read();
@@ -25,7 +25,7 @@ private:
     std::vector<uint8_t> buffer_;     // temp read buffer
     std::vector<uint8_t> read_buf_;   // accumulate buffer
 
-    std::queue<std::string> write_queue_; // IMPORTANT
+    std::queue<std::string> write_queue_;
     bool writing_ = false;
 
     SessionManager& manager_;
